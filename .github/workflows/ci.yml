@@ -1,0 +1,23 @@
+name: Run Python Tests
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - master
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build docker image
+        run: |
+          docker build -f Dockerfile . -t oracle:latest
+      - name: Run tests
+        run: |
+          docker run oracle:latest
+

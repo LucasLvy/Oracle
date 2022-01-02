@@ -53,6 +53,7 @@ update_time = date_to_string(update_timestamp)
 initial_storage = ContractInterface.from_file(compiled_contract_path).storage.dummy()
 initial_storage["admin"] = admin
 initial_storage["counter"] = 0
+initial_storage["request_price"] = 1000
 initial_storage["supported_pairs"] = ["BTCETH"]
 initial_storage["prices"] = {
     "BTCETH": {
@@ -241,6 +242,37 @@ class OracleContractTest(TestCase):
         # Execute entrypoint
         with self.raisesMichelsonError(pair_not_supported):
             self.oracle.blacklist_pair("BTCXTZ").interpret(storage=init_storage, sender=admin)
+
+
+    ########################
+    # change request price #
+    ########################
+
+    def test_change_price_should_work(self):
+        # Init
+        init_storage = deepcopy(initial_storage)
+        new_price = 100
+        # Execute entrypoint
+        res = self.oracle.change_request_price(new_price).interpret(storage=init_storage, sender=admin)
+        self.assertEqual(new_price, res.storage["request_price"])
+        self.assertEqual([], res.operations)
+
+    def test_change_price_not_admin_should_fail(self):
+        # Init
+        init_storage = deepcopy(initial_storage)
+        # Execute entrypoint
+        with self.raisesMichelsonError(only_admin):
+            self.oracle.change_request_price(100).interpret(storage=init_storage, sender=alice)
+
+    def test_change_price_sending_XTZ_should_fail(self):
+        # Init
+        init_storage = deepcopy(initial_storage)
+        # Execute entrypoint
+        with self.raisesMichelsonError(amount_must_be_zero_tez):
+            self.oracle.change_request_price(100).interpret(storage=init_storage, sender=admin, amount=1)
+
+
+
     # TODO: faire les tests
     # TODO: faire les tests
     # TODO: faire les tests
@@ -253,7 +285,7 @@ class OracleContractTest(TestCase):
         # Init
         init_storage = deepcopy(initial_storage)
         # Execute entrypoint
-        res = self.oracle.harvest_xtz(admin).interpret(storage=init_storage, sender=admin, amount=3)
+        res = self.oracle.harvest_xtz(admin).interpret(storage=init_storage, sender=admin)
         print()
 
     # TODO: faire les tests

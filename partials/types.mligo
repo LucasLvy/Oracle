@@ -50,6 +50,7 @@ type storage = {
 type return = operation list * storage
 type entrypoint =
     | Harvest_xtz of (address)
+    | Change_request_price of (tez)
     | Whitelist_user of (address)
     | Blacklist_user of (address)
     | Whitelist_pair of (string)

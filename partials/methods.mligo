@@ -5,7 +5,6 @@
 // -----------------
 
 let no_operation : operation list = []
-let oracle_price : tez = 1000mutez
 
 // -----------------
 // --  INTERNALS  --
@@ -21,13 +20,22 @@ let xtz_transfer (to_ : address) (amount_ : tez) : operation =
     | Some c -> c
     in
     Tezos.transaction () amount_ to_contract
+
 // ------------------
 // -- ENTRY POINTS --
 // ------------------
 
+[@inline]
 let harvest_xtz (s : storage) (to_ : address) : return =
+    let _check_if_admin : unit = assert_with_error (Tezos.sender = s.admin) only_admin in
+    let _check_if_no_tez : unit = assert_with_error (Tezos.amount = 0tez) amount_must_be_zero_tez in
     let op : operation = xtz_transfer (to_) (Tezos.balance) in
     ([op], s)
+
+let change_request_price (s : storage) (new_price : tez) : return =
+    let _check_if_admin : unit = assert_with_error (Tezos.sender = s.admin) only_admin in
+    let _check_if_no_tez : unit = assert_with_error (Tezos.amount = 0tez) amount_must_be_zero_tez in
+    (no_operation, { s with request_price = new_price })
 
 let whitelist_user (s: storage) (user: address) : return =
     let admin_address : address = s.admin in
@@ -73,7 +81,7 @@ let set_admin (s : storage) (new_admin : address) : return =
     (no_operation, final_storage)
 
 let get_price (s : storage) (params : get_price_params) : return =
-    let _check_if_tez : unit = assert_with_error (Tezos.amount = oracle_price) amount_must_be_oracle_price in
+    let _check_if_tez : unit = assert_with_error (Tezos.amount = s.request_price) amount_must_be_oracle_price in
     let pair : string = params.pair in
     let _check_if_pair_supported : unit = assert_with_error (Set.mem pair s.supported_pairs) pair_not_supported in
     let prices : (string, pair) map = s.prices in

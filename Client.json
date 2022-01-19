@@ -1,0 +1,242 @@
+[ { "prim": "parameter",
+    "args":
+      [ { "prim": "or",
+          "args":
+            [ { "prim": "string", "annots": [ "%query_price" ] },
+              { "prim": "pair",
+                "args":
+                  [ { "prim": "pair",
+                      "args":
+                        [ { "prim": "pair",
+                            "args":
+                              [ { "prim": "pair",
+                                  "args":
+                                    [ { "prim": "timestamp",
+                                        "annots": [ "%close_time" ] },
+                                      { "prim": "nat",
+                                        "annots": [ "%high_price" ] } ] },
+                                { "prim": "pair",
+                                  "args":
+                                    [ { "prim": "nat",
+                                        "annots": [ "%last_price" ] },
+                                      { "prim": "nat",
+                                        "annots": [ "%low_price" ] } ] } ] },
+                          { "prim": "pair",
+                            "args":
+                              [ { "prim": "pair",
+                                  "args":
+                                    [ { "prim": "timestamp",
+                                        "annots": [ "%open_time" ] },
+                                      { "prim": "string",
+                                        "annots": [ "%pair" ] } ] },
+                                { "prim": "pair",
+                                  "args":
+                                    [ { "prim": "nat",
+                                        "annots": [ "%quote_volume" ] },
+                                      { "prim": "timestamp",
+                                        "annots": [ "%update_time" ] } ] } ] } ] },
+                    { "prim": "nat", "annots": [ "%volume" ] } ],
+                "annots": [ "%receive_price" ] } ] } ] },
+  { "prim": "storage",
+    "args":
+      [ { "prim": "pair",
+          "args":
+            [ { "prim": "pair",
+                "args":
+                  [ { "prim": "address", "annots": [ "%oracle_address" ] },
+                    { "prim": "pair",
+                      "args":
+                        [ { "prim": "pair",
+                            "args":
+                              [ { "prim": "pair",
+                                  "args":
+                                    [ { "prim": "pair",
+                                        "args":
+                                          [ { "prim": "timestamp",
+                                              "annots": [ "%close_time" ] },
+                                            { "prim": "nat",
+                                              "annots": [ "%high_price" ] } ] },
+                                      { "prim": "pair",
+                                        "args":
+                                          [ { "prim": "nat",
+                                              "annots": [ "%last_price" ] },
+                                            { "prim": "nat",
+                                              "annots": [ "%low_price" ] } ] } ] },
+                                { "prim": "pair",
+                                  "args":
+                                    [ { "prim": "pair",
+                                        "args":
+                                          [ { "prim": "timestamp",
+                                              "annots": [ "%open_time" ] },
+                                            { "prim": "string",
+                                              "annots": [ "%pair" ] } ] },
+                                      { "prim": "pair",
+                                        "args":
+                                          [ { "prim": "nat",
+                                              "annots": [ "%quote_volume" ] },
+                                            { "prim": "timestamp",
+                                              "annots": [ "%update_time" ] } ] } ] } ] },
+                          { "prim": "nat", "annots": [ "%volume" ] } ],
+                      "annots": [ "%pair" ] } ] },
+              { "prim": "mutez", "annots": [ "%query_price" ] } ] } ] },
+  { "prim": "code",
+    "args":
+      [ [ { "prim": "UNPAIR" },
+          { "prim": "IF_LEFT",
+            "args":
+              [ [ { "prim": "PUSH",
+                    "args":
+                      [ { "prim": "string" },
+                        { "string": "not the right amount of tez" } ] },
+                  { "prim": "DUP", "args": [ { "int": "3" } ] },
+                  { "prim": "CDR" }, { "prim": "AMOUNT" },
+                  { "prim": "COMPARE" }, { "prim": "EQ" },
+                  { "prim": "IF",
+                    "args":
+                      [ [ { "prim": "DROP" } ], [ { "prim": "FAILWITH" } ] ] },
+                  { "prim": "SWAP" }, { "prim": "DUP" },
+                  { "prim": "DUG", "args": [ { "int": "2" } ] },
+                  { "prim": "CAR" }, { "prim": "CAR" },
+                  { "prim": "CONTRACT",
+                    "args":
+                      [ { "prim": "pair",
+                          "args":
+                            [ { "prim": "pair",
+                                "args":
+                                  [ { "prim": "string",
+                                      "annots": [ "%pair" ] },
+                                    { "prim": "contract",
+                                      "args":
+                                        [ { "prim": "pair",
+                                            "args":
+                                              [ { "prim": "pair",
+                                                  "args":
+                                                    [ { "prim": "pair",
+                                                        "args":
+                                                          [ { "prim": "pair",
+                                                              "args":
+                                                                [ { "prim":
+                                                                    "timestamp",
+                                                                    "annots":
+                                                                    [ "%close_time" ] },
+                                                                  { "prim":
+                                                                    "nat",
+                                                                    "annots":
+                                                                    [ "%high_price" ] } ] },
+                                                            { "prim": "pair",
+                                                              "args":
+                                                                [ { "prim":
+                                                                    "nat",
+                                                                    "annots":
+                                                                    [ "%last_price" ] },
+                                                                  { "prim":
+                                                                    "nat",
+                                                                    "annots":
+                                                                    [ "%low_price" ] } ] } ] },
+                                                      { "prim": "pair",
+                                                        "args":
+                                                          [ { "prim": "pair",
+                                                              "args":
+                                                                [ { "prim":
+                                                                    "timestamp",
+                                                                    "annots":
+                                                                    [ "%open_time" ] },
+                                                                  { "prim":
+                                                                    "string",
+                                                                    "annots":
+                                                                    [ "%pair" ] } ] },
+                                                            { "prim": "pair",
+                                                              "args":
+                                                                [ { "prim":
+                                                                    "nat",
+                                                                    "annots":
+                                                                    [ "%quote_volume" ] },
+                                                                  { "prim":
+                                                                    "timestamp",
+                                                                    "annots":
+                                                                    [ "%update_time" ] } ] } ] } ] },
+                                                { "prim": "nat",
+                                                  "annots": [ "%volume" ] } ] } ],
+                                      "annots": [ "%target" ] } ] },
+                              { "prim": "pair",
+                                "args":
+                                  [ { "prim": "address",
+                                      "annots": [ "%target_address" ] },
+                                    { "prim": "string",
+                                      "annots": [ "%target_entrypoint" ] } ] } ] } ],
+                    "annots": [ "%get_price" ] },
+                  { "prim": "IF_NONE",
+                    "args":
+                      [ [ { "prim": "PUSH",
+                            "args":
+                              [ { "prim": "string" },
+                                { "string": "invalid address" } ] },
+                          { "prim": "FAILWITH" } ], [] ] },
+                  { "prim": "SELF_ADDRESS" },
+                  { "prim": "CONTRACT",
+                    "args":
+                      [ { "prim": "pair",
+                          "args":
+                            [ { "prim": "pair",
+                                "args":
+                                  [ { "prim": "pair",
+                                      "args":
+                                        [ { "prim": "pair",
+                                            "args":
+                                              [ { "prim": "timestamp",
+                                                  "annots": [ "%close_time" ] },
+                                                { "prim": "nat",
+                                                  "annots": [ "%high_price" ] } ] },
+                                          { "prim": "pair",
+                                            "args":
+                                              [ { "prim": "nat",
+                                                  "annots": [ "%last_price" ] },
+                                                { "prim": "nat",
+                                                  "annots": [ "%low_price" ] } ] } ] },
+                                    { "prim": "pair",
+                                      "args":
+                                        [ { "prim": "pair",
+                                            "args":
+                                              [ { "prim": "timestamp",
+                                                  "annots": [ "%open_time" ] },
+                                                { "prim": "string",
+                                                  "annots": [ "%pair" ] } ] },
+                                          { "prim": "pair",
+                                            "args":
+                                              [ { "prim": "nat",
+                                                  "annots":
+                                                    [ "%quote_volume" ] },
+                                                { "prim": "timestamp",
+                                                  "annots":
+                                                    [ "%update_time" ] } ] } ] } ] },
+                              { "prim": "nat", "annots": [ "%volume" ] } ] } ],
+                    "annots": [ "%receive_price" ] },
+                  { "prim": "IF_NONE",
+                    "args":
+                      [ [ { "prim": "PUSH",
+                            "args":
+                              [ { "prim": "string" }, { "string": "fail" } ] },
+                          { "prim": "FAILWITH" } ], [] ] },
+                  { "prim": "PUSH",
+                    "args":
+                      [ { "prim": "string" }, { "string": "receive_price" } ] },
+                  { "prim": "SELF_ADDRESS" }, { "prim": "PAIR" },
+                  { "prim": "SWAP" },
+                  { "prim": "DIG", "args": [ { "int": "3" } ] },
+                  { "prim": "PAIR" }, { "prim": "PAIR" }, { "prim": "SWAP" },
+                  { "prim": "DUP", "args": [ { "int": "3" } ] },
+                  { "prim": "CDR" },
+                  { "prim": "DIG", "args": [ { "int": "2" } ] },
+                  { "prim": "TRANSFER_TOKENS" }, { "prim": "SWAP" },
+                  { "prim": "NIL", "args": [ { "prim": "operation" } ] },
+                  { "prim": "DIG", "args": [ { "int": "2" } ] },
+                  { "prim": "CONS" }, { "prim": "PAIR" } ],
+                [ { "prim": "SWAP" }, { "prim": "DUP" },
+                  { "prim": "DUG", "args": [ { "int": "2" } ] },
+                  { "prim": "CDR" }, { "prim": "SWAP" },
+                  { "prim": "DIG", "args": [ { "int": "2" } ] },
+                  { "prim": "CAR" }, { "prim": "CAR" }, { "prim": "PAIR" },
+                  { "prim": "PAIR" },
+                  { "prim": "NIL", "args": [ { "prim": "operation" } ] },
+                  { "prim": "PAIR" } ] ] } ] ] } ]
+

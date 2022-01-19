@@ -243,7 +243,6 @@ class OracleContractTest(TestCase):
         with self.raisesMichelsonError(pair_not_supported):
             self.oracle.blacklist_pair("BTCXTZ").interpret(storage=init_storage, sender=admin)
 
-
     ########################
     # change request price #
     ########################
@@ -270,8 +269,6 @@ class OracleContractTest(TestCase):
         # Execute entrypoint
         with self.raisesMichelsonError(amount_must_be_zero_tez):
             self.oracle.change_request_price(100).interpret(storage=init_storage, sender=admin, amount=1)
-
-
 
     # TODO: faire les tests
     # TODO: faire les tests
@@ -375,6 +372,7 @@ class OracleContractTest(TestCase):
         }
         with self.raisesMichelsonError(pair_not_supported):
             self.oracle.get_price(params).interpret(storage=init_storage, sender=bob, amount=1000)
+
     ##########
     # update #
     ##########
@@ -432,9 +430,11 @@ class OracleContractTest(TestCase):
         self.assertEqual(contract_address, res.operations[0]["source"])
         self.assertEqual(contract_address, res.operations[0]["destination"])
         self.assertEqual(receive, res.operations[0]["parameters"]["entrypoint"])
-        self.assertEqual(update_quote_volume, int(res.operations[0]["parameters"]["value"]["args"][0]["args"][2]["int"]))
+        self.assertEqual(update_quote_volume,
+                         int(res.operations[0]["parameters"]["value"]["args"][0]["args"][2]["int"]))
         self.assertEqual('BTCETH', res.operations[0]["parameters"]["value"]["args"][0]["args"][1]["args"][1]["string"])
-        self.assertEqual(date_to_string(update_open_timestamp), res.operations[0]["parameters"]["value"]["args"][0]["args"][1]["args"][0]["string"])
+        self.assertEqual(date_to_string(update_open_timestamp),
+                         res.operations[0]["parameters"]["value"]["args"][0]["args"][1]["args"][0]["string"])
         self.assertEqual(date_to_string(update_close_timestamp),
                          res.operations[0]["parameters"]["value"]["args"][0]["args"][0]["args"][0]["args"][0]["string"])
         self.assertEqual(date_to_string(60), res.operations[0]["parameters"]["value"]["args"][0]["args"][3]["string"])

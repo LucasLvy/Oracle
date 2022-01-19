@@ -1,0 +1,79 @@
+{ parameter
+    (or (string %query_price)
+        (pair %receive_price
+           (pair (pair (pair (timestamp %close_time) (nat %high_price))
+                       (pair (nat %last_price) (nat %low_price)))
+                 (pair (pair (timestamp %open_time) (string %pair))
+                       (pair (nat %quote_volume) (timestamp %update_time))))
+           (nat %volume))) ;
+  storage
+    (pair (pair (address %oracle_address)
+                (pair %pair
+                   (pair (pair (pair (timestamp %close_time) (nat %high_price))
+                               (pair (nat %last_price) (nat %low_price)))
+                         (pair (pair (timestamp %open_time) (string %pair))
+                               (pair (nat %quote_volume) (timestamp %update_time))))
+                   (nat %volume)))
+          (mutez %query_price)) ;
+  code { UNPAIR ;
+         IF_LEFT
+           { PUSH string "not the right amount of tez" ;
+             DUP 3 ;
+             CDR ;
+             AMOUNT ;
+             COMPARE ;
+             EQ ;
+             IF { DROP } { FAILWITH } ;
+             SWAP ;
+             DUP ;
+             DUG 2 ;
+             CAR ;
+             CAR ;
+             CONTRACT %get_price
+               (pair (pair (string %pair)
+                           (contract %target
+                              (pair (pair (pair (pair (timestamp %close_time) (nat %high_price))
+                                                (pair (nat %last_price) (nat %low_price)))
+                                          (pair (pair (timestamp %open_time) (string %pair))
+                                                (pair (nat %quote_volume) (timestamp %update_time))))
+                                    (nat %volume))))
+                     (pair (address %target_address) (string %target_entrypoint))) ;
+             IF_NONE { PUSH string "invalid address" ; FAILWITH } {} ;
+             SELF_ADDRESS ;
+             CONTRACT %receive_price
+               (pair (pair (pair (pair (timestamp %close_time) (nat %high_price))
+                                 (pair (nat %last_price) (nat %low_price)))
+                           (pair (pair (timestamp %open_time) (string %pair))
+                                 (pair (nat %quote_volume) (timestamp %update_time))))
+                     (nat %volume)) ;
+             IF_NONE { PUSH string "fail" ; FAILWITH } {} ;
+             PUSH string "receive_price" ;
+             SELF_ADDRESS ;
+             PAIR ;
+             SWAP ;
+             DIG 3 ;
+             PAIR ;
+             PAIR ;
+             SWAP ;
+             DUP 3 ;
+             CDR ;
+             DIG 2 ;
+             TRANSFER_TOKENS ;
+             SWAP ;
+             NIL operation ;
+             DIG 2 ;
+             CONS ;
+             PAIR }
+           { SWAP ;
+             DUP ;
+             DUG 2 ;
+             CDR ;
+             SWAP ;
+             DIG 2 ;
+             CAR ;
+             CAR ;
+             PAIR ;
+             PAIR ;
+             NIL operation ;
+             PAIR } } }
+

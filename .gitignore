@@ -3,3 +3,4 @@
 test/__pycache__/
 venv/
 test/Oracle.tz
+node_modules/
